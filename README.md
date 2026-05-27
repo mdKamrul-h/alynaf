@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AlyNaf — UK to Bangladesh Shopping & Shipping
+
+Website for [AlyNaf](https://www.facebook.com/alynaf2019) — order products from UK retailers and get them delivered to your doorstep in Bangladesh.
+
+## Features
+
+- **Landing page** — brand story, how it works, supported UK retailers
+- **Place Order** — submit product URLs with size/color, delivery details, and payment preference
+- **Track Order** — check order status with order number + phone
+- **Admin Dashboard** — manage orders and update status (`/admin`)
+- **WhatsApp integration** — direct chat link for inquiries
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route    | Description              |
+| -------- | ------------------------ |
+| `/`      | Home page                |
+| `/order` | Place a new order        |
+| `/track` | Track existing order     |
+| `/admin` | Admin order dashboard    |
 
-## Learn More
+## Admin Access
 
-To learn more about Next.js, take a look at the following resources:
+Default admin key: `alynaf-admin`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set a secure key in production:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .env.local
+# Edit ADMIN_KEY in .env.local
+```
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- SQLite (better-sqlite3) for order storage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact (AlyNaf)
+
+- Email: alynaf2019@gmail.com
+- Phone: 01991-198339
+- WhatsApp: +880 1991-198339
