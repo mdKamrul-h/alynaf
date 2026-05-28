@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
 
   for (const conv of MOCK_DATA) {
     const lastMsg = conv.messages[conv.messages.length - 1];
-    upsertConversation({
+    await upsertConversation({
       id: conv.id,
       customerPsid: conv.customerPsid,
       customerName: conv.customerName,
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     });
 
     for (const msg of conv.messages) {
-      appendMessage(
+      await appendMessage(
         conv.id,
         msg.fromType,
         msg.text,

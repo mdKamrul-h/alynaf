@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       const ts = new Date(event.timestamp).toISOString();
       const snippet = text.slice(0, 100);
 
-      upsertConversation({
+      await upsertConversation({
         id: convId,
         customerPsid: psid,
         customerName: psid, // PSID only — name not in webhook payload, sync fills it
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         isLikelyOrder: signals?.isLikelyOrder ?? false,
       });
 
-      appendMessage(convId, fromType, text, attachmentsJson, event.message.mid);
+      await appendMessage(convId, fromType, text, attachmentsJson, event.message.mid);
     }
   }
 

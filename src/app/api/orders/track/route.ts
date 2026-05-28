@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const order = getOrderByNumberAndPhone(orderNumber, phone);
+  const order = await getOrderByNumberAndPhone(orderNumber, phone);
 
   if (!order) {
     return NextResponse.json(

@@ -54,50 +54,53 @@ function generateOrderNumber(): string {
   return `AN-${ymd}-${suffix}`;
 }
 
-export function createOrder(input: CreateOrderInput): Order {
+export async function createOrder(input: CreateOrderInput): Promise<Order> {
   const db = getDb();
   const now = new Date().toISOString();
   const id = randomBytes(8).toString("hex");
   const orderNumber = generateOrderNumber();
 
-  db.prepare(
-    `INSERT INTO orders (
-      id, order_number, customer_name, phone, email, address, city,
-      items, notes, payment_method, status, source, fb_conversation_id, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)`
-  ).run(
-    id,
-    orderNumber,
-    input.customerName.trim(),
-    input.phone.trim(),
-    input.email.trim(),
-    input.address.trim(),
-    input.city.trim(),
-    JSON.stringify(input.items),
-    input.notes.trim(),
-    input.paymentMethod,
-    input.source ?? "web",
-    input.fbConversationId ?? null,
-    now,
-    now
-  );
+  const { data, error } = await db
+    .from("orders")
+    .insert({
+      id,
+      order_number: orderNumber,
+      customer_name: input.customerName.trim(),
+      phone: input.phone.trim(),
+      email: input.email.trim(),
+      address: input.address.trim(),
+      city: input.city.trim(),
+      items: JSON.stringify(input.items),
+      notes: input.notes.trim(),
+      payment_method: input.paymentMethod,
+      status: "pending",
+      source: input.source ?? "web",
+      fb_conversation_id: input.fbConversationId ?? null,
+      created_at: now,
+      updated_at: now,
+    })
+    .select()
+    .single();
 
-  return getOrderByNumber(orderNumber)!;
+  if (error) throw error;
+  return rowToOrder(data as OrderRow);
 }
 
-export function getOrderByNumber(orderNumber: string): Order | null {
+export async function getOrderByNumber(orderNumber: string): Promise<Order | null> {
   const db = getDb();
-  const row = db
-    .prepare("SELECT * FROM orders WHERE order_number = ?")
-    .get(orderNumber.toUpperCase()) as OrderRow | undefined;
-  return row ? rowToOrder(row) : null;
+  const { data } = await db
+    .from("orders")
+    .select("*")
+    .eq("order_number", orderNumber.toUpperCase())
+    .maybeSingle();
+  return data ? rowToOrder(data as OrderRow) : null;
 }
 
-export function getOrderByNumberAndPhone(
+export async function getOrderByNumberAndPhone(
   orderNumber: string,
   phone: string
-): Order | null {
-  const order = getOrderByNumber(orderNumber);
+): Promise<Order | null> {
+  const order = await getOrderByNumber(orderNumber);
   if (!order) return null;
   const normalizedInput = phone.replace(/\D/g, "");
   const normalizedStored = order.phone.replace(/\D/g, "");
@@ -111,33 +114,33 @@ export function getOrderByNumberAndPhone(
   return null;
 }
 
-export function getAllOrders(source?: OrderSource): Order[] {
+export async function getAllOrders(source?: OrderSource): Promise<Order[]> {
   const db = getDb();
-  const rows = source
-    ? (db.prepare("SELECT * FROM orders WHERE source = ? ORDER BY created_at DESC").all(source) as OrderRow[])
-    : (db.prepare("SELECT * FROM orders ORDER BY created_at DESC").all() as OrderRow[]);
-  return rows.map(rowToOrder);
+  let query = db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (source) query = query.eq("source", source);
+  const { data } = await query;
+  return (data ?? []).map((row) => rowToOrder(row as OrderRow));
 }
 
-export function updateOrderStatus(
+export async function updateOrderStatus(
   orderNumber: string,
   status: OrderStatus,
   quoteAmount?: number
-): Order | null {
+): Promise<Order | null> {
   const db = getDb();
   const now = new Date().toISOString();
-  const existing = getOrderByNumber(orderNumber);
-  if (!existing) return null;
+  const updateData: Record<string, unknown> = { status, updated_at: now };
+  if (quoteAmount !== undefined) updateData.quote_amount = quoteAmount;
 
-  if (quoteAmount !== undefined) {
-    db.prepare(
-      "UPDATE orders SET status = ?, quote_amount = ?, updated_at = ? WHERE order_number = ?"
-    ).run(status, quoteAmount, now, orderNumber.toUpperCase());
-  } else {
-    db.prepare(
-      "UPDATE orders SET status = ?, updated_at = ? WHERE order_number = ?"
-    ).run(status, now, orderNumber.toUpperCase());
-  }
+  const { data } = await db
+    .from("orders")
+    .update(updateData)
+    .eq("order_number", orderNumber.toUpperCase())
+    .select()
+    .maybeSingle();
 
-  return getOrderByNumber(orderNumber);
+  return data ? rowToOrder(data as OrderRow) : null;
 }

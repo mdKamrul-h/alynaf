@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: validated }, { status: 400 });
     }
 
-    const order = createOrder(validated);
+    const order = await createOrder(validated);
     return NextResponse.json({ order }, { status: 201 });
   } catch (error) {
     console.error("Order creation failed:", error);
@@ -104,6 +104,6 @@ export async function GET(request: NextRequest) {
   }
 
   const source = request.nextUrl.searchParams.get("source") as OrderSource | null;
-  const orders = getAllOrders(source ?? undefined);
+  const orders = await getAllOrders(source ?? undefined);
   return NextResponse.json({ orders });
 }

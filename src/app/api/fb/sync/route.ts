@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         .map((m) => parseMessageSignals(m.message ?? ""));
       const isLikelyOrder = allSignals.some((s) => s.isLikelyOrder);
 
-      upsertConversation({
+      await upsertConversation({
         id: convId,
         customerPsid: customer.id,
         customerName: customer.name,
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
       });
 
       // Append messages that aren't stored yet
-      const existing = getConversationMessages(convId);
+      const existing = await getConversationMessages(convId);
       const existingIds = new Set(existing.map((m) => m.id));
 
       for (const msg of [...messages].reverse()) {
         if (existingIds.has(msg.id)) continue;
         const fromType = msg.from.id === pageId ? "page" : "customer";
-        appendMessage(
+        await appendMessage(
           convId,
           fromType,
           msg.message ?? "",

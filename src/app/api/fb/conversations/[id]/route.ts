@@ -22,12 +22,12 @@ export async function GET(
   }
 
   const { id } = await params;
-  const conversation = getConversation(id);
+  const conversation = await getConversation(id);
   if (!conversation) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const messages = getConversationMessages(id);
+  const messages = await getConversationMessages(id);
   return NextResponse.json({ conversation, messages });
 }
 
@@ -40,16 +40,16 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  if (!getConversation(id)) {
+  if (!(await getConversation(id))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   const body = (await request.json()) as { action?: string };
 
   if (body.action === "markRead") {
-    markConversationRead(id);
+    await markConversationRead(id);
   } else if (body.action === "archive") {
-    archiveConversation(id);
+    await archiveConversation(id);
   } else {
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   }

@@ -35,7 +35,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const order = updateOrderStatus(
+    const order = await updateOrderStatus(
       orderNumber,
       status,
       quoteAmount !== undefined ? Number(quoteAmount) : undefined

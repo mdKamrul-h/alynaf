@@ -60,6 +60,8 @@ export interface CreateOrderInput {
 
 export type FbConversationStatus = "open" | "archived";
 
+export type InboxChannel = "facebook" | "whatsapp";
+
 export interface FbConversation {
   id: string;
   customerPsid: string;
@@ -71,6 +73,7 @@ export interface FbConversation {
   status: FbConversationStatus;
   isLikelyOrder: boolean;
   linkedOrderNumber: string | null;
+  channel: InboxChannel;
   createdAt: string;
   updatedAt: string;
 }
@@ -84,6 +87,7 @@ export interface FbMessage {
   text: string;
   attachmentsJson: string | null;
   signalsJson: string | null;
+  channel: InboxChannel;
   createdAt: string;
 }
 
@@ -95,4 +99,9 @@ export interface MessageSignals {
   sizes: string[];
   isLikelyOrder: boolean;
   score: number;
+  // AI-enhanced fields (present when Claude analyzed the message)
+  aiSummary?: string;
+  confidence?: number;
+  extractedName?: string;
+  extractedCity?: string;
 }

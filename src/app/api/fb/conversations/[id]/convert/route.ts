@@ -19,7 +19,7 @@ export async function POST(
   }
 
   const { id } = await params;
-  const conv = getConversation(id);
+  const conv = await getConversation(id);
   if (!conv) {
     return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
   }
@@ -61,8 +61,8 @@ export async function POST(
     fbConversationId: id,
   };
 
-  const order = createOrder(input);
-  linkOrderToConversation(id, order.orderNumber);
+  const order = await createOrder(input);
+  await linkOrderToConversation(id, order.orderNumber);
 
   return NextResponse.json({ order }, { status: 201 });
 }

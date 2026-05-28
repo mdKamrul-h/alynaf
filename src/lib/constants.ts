@@ -1,6 +1,6 @@
 export const SITE = {
   name: "AlyNaf",
-  tagline: "Attain the Unthought",
+  tagline: "Attaining the Unthought",
   headline: "UK Brands at Your Doorstep in BD",
   description:
     "Pre-order through AlyNaf from almost any UK website — Amazon, eBay, Adidas, Argos, Harrods, Selfridges, Boots, Superdrug, Gucci, LV, Farfetch, John Lewis, and more. We shop, ship, and deliver to Bangladesh.",
@@ -10,6 +10,7 @@ export const SITE = {
   whatsapp: "+8801991198339",
   whatsappDisplay: "+880 1991-198339",
   facebook: "https://www.facebook.com/alynafukbd",
+  messenger: "https://m.me/alynafukbd",
   fbHandle: "alynafukbd",
   fbFollowers: 65,
   fbPosts: 751,
@@ -18,6 +19,8 @@ export const SITE = {
 export interface StoreInfo {
   name: string;
   domain: string;
+  /** Override domain used for Clearbit logo lookup (use primary .com where .co.uk fails) */
+  logoDomain?: string;
   category: string;
   description: string;
   color: string;
@@ -28,6 +31,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Amazon UK",
     domain: "amazon.co.uk",
+    logoDomain: "amazon.com",
     category: "Everything",
     description: "Electronics, books, fashion, home & more",
     color: "#FF9900",
@@ -68,6 +72,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Adidas",
     domain: "adidas.co.uk",
+    logoDomain: "adidas.com",
     category: "Sports & Fashion",
     description: "Trainers, sportswear & accessories",
     color: "#000000",
@@ -100,6 +105,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Argos",
     domain: "argos.co.uk",
+    logoDomain: "argos.co.uk",
     category: "Home & Electronics",
     description: "Home appliances, toys & technology",
     color: "#E62400",
@@ -116,6 +122,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Marks & Spencer",
     domain: "marksandspencer.com",
+    logoDomain: "marksandspencer.com",
     category: "Fashion & Food",
     description: "Quality clothing, food & homeware",
     color: "#000000",
@@ -132,6 +139,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Net-A-Porter",
     domain: "net-a-porter.com",
+    logoDomain: "net-a-porter.com",
     category: "Luxury Fashion",
     description: "Ultra-luxury designer fashion",
     color: "#1A1A1A",
@@ -140,6 +148,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "eBay UK",
     domain: "ebay.co.uk",
+    logoDomain: "ebay.com",
     category: "Everything",
     description: "Marketplace with millions of products",
     color: "#E53238",

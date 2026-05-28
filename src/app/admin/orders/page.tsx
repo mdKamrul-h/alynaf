@@ -3,10 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "../_lib/AdminAuthContext";
-import { AdminNav } from "@/components/admin/AdminNav";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { OrdersTab } from "@/components/admin/OrdersTab";
-import { StatsTab } from "@/components/admin/StatsTab";
-import Footer from "@/components/Footer";
 
 export default function AdminOrdersPage() {
   const { adminKey, ready } = useAdminAuth();
@@ -19,15 +17,10 @@ export default function AdminOrdersPage() {
   if (!ready || !adminKey) return null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
-      <AdminNav />
-      <main className="flex-1 py-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <OrdersTab adminKey={adminKey} />
-          <StatsTab adminKey={adminKey} />
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <AdminShell>
+      <div className="px-8 py-8">
+        <OrdersTab adminKey={adminKey} />
+      </div>
+    </AdminShell>
   );
 }

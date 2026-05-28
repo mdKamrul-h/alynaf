@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getConversation, appendMessage } from "@/lib/conversations";
 import { sendMessage, isFbConfigured, FbApiError } from "@/lib/fb";
+import { sendWaMessage, isWaConfigured, WaApiError } from "@/lib/wa";
 
 function requireAdmin(request: NextRequest): boolean {
   return (
@@ -18,7 +19,7 @@ export async function POST(
   }
 
   const { id } = await params;
-  const conv = getConversation(id);
+  const conv = await getConversation(id);
   if (!conv) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -29,21 +30,34 @@ export async function POST(
     return NextResponse.json({ error: "text is required" }, { status: 400 });
   }
 
-  let fbSent = false;
-  if (isFbConfigured()) {
-    try {
-      await sendMessage(conv.customerPsid, text);
-      fbSent = true;
-    } catch (err) {
-      if (err instanceof FbApiError) {
-        console.error("FB send error:", err.message);
+  let sent = false;
+
+  if (conv.channel === "whatsapp") {
+    if (isWaConfigured()) {
+      try {
+        await sendWaMessage(conv.customerPsid, text);
+        sent = true;
+      } catch (err) {
+        if (err instanceof WaApiError) {
+          console.error("WA send error:", err.message);
+        }
       }
-      // Fall through — still store as local draft
+    }
+  } else {
+    if (isFbConfigured()) {
+      try {
+        await sendMessage(conv.customerPsid, text);
+        sent = true;
+      } catch (err) {
+        if (err instanceof FbApiError) {
+          console.error("FB send error:", err.message);
+        }
+      }
     }
   }
 
   // Store the reply locally regardless
-  const message = appendMessage(id, "page", text);
+  const message = await appendMessage(id, "page", text);
 
-  return NextResponse.json({ message, fbSent });
+  return NextResponse.json({ message, sent });
 }
