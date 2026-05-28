@@ -1,49 +1,39 @@
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { join } from "path";
 import type { AiAgentSettings } from "./ai-settings-types";
 import { DEFAULT_AI_SETTINGS } from "./ai-settings-types";
 
 export type { AiAgentSettings } from "./ai-settings-types";
 export { DEFAULT_AI_SETTINGS } from "./ai-settings-types";
 
-const SETTINGS_PATH = join(process.cwd(), "data", "ai-settings.json");
+// In-memory store — no filesystem, works on Vercel and any serverless runtime.
+// Settings reset on cold start; swap this for a DB write when ready.
+let store: AiAgentSettings = { ...DEFAULT_AI_SETTINGS };
 
 export function getAiSettings(): AiAgentSettings {
-  try {
-    const raw = readFileSync(SETTINGS_PATH, "utf-8");
-    return { ...DEFAULT_AI_SETTINGS, ...(JSON.parse(raw) as Partial<AiAgentSettings>) };
-  } catch {
-    return { ...DEFAULT_AI_SETTINGS };
-  }
+  return { ...store };
 }
 
 export function saveAiSettings(settings: Partial<AiAgentSettings>): AiAgentSettings {
-  const merged: AiAgentSettings = { ...DEFAULT_AI_SETTINGS, ...settings };
-  mkdirSync(join(process.cwd(), "data"), { recursive: true });
-  writeFileSync(SETTINGS_PATH, JSON.stringify(merged, null, 2), "utf-8");
-  return merged;
+  store = { ...DEFAULT_AI_SETTINGS, ...settings };
+  return { ...store };
 }
 
-export function buildSystemPrompt(
-  settings: AiAgentSettings,
-  channel: string
-): string {
+export function buildSystemPrompt(settings: AiAgentSettings, channel: string): string {
   const channelName = channel === "whatsapp" ? "WhatsApp" : "Facebook Messenger";
 
   const toneMap = {
-    friendly: "Be warm, approachable, and conversational. Use 'inshaAllah' naturally where appropriate.",
+    friendly:     "Be warm, approachable, and conversational. Use 'inshaAllah' naturally where appropriate.",
     professional: "Be polite but business-focused. Keep it crisp and clear.",
-    formal: "Maintain formal language. Use proper honorifics and a respectful tone.",
+    formal:       "Maintain formal language. Use proper honorifics and a respectful tone.",
   };
 
   const languageMap = {
-    auto: "Mirror the customer's language — they write Bangla, English, or mixed 'Banglish'. Match their style exactly.",
-    bangla: "Reply in Bangla (Romanized Bangla / Banglish). Use familiar Bangladeshi expressions.",
+    auto:    "Mirror the customer's language — they write Bangla, English, or mixed 'Banglish'. Match their style exactly.",
+    bangla:  "Reply in Bangla (Romanized Bangla / Banglish). Use familiar Bangladeshi expressions.",
     english: "Reply in English. Keep it clear and simple.",
   };
 
   const lengthMap = {
-    short: "Keep replies SHORT: 1–3 sentences maximum.",
+    short:  "Keep replies SHORT: 1–3 sentences maximum.",
     medium: "Keep replies to 2–4 sentences. Be informative but concise.",
   };
 
@@ -63,13 +53,8 @@ export function buildSystemPrompt(
     "- Output ONLY the reply text. No labels, no quotes.",
   ];
 
-  if (settings.greetingTemplate) {
-    parts.push(`- Greeting template: ${settings.greetingTemplate}`);
-  }
-
-  if (settings.customInstructions) {
-    parts.push("", "Additional instructions:", settings.customInstructions);
-  }
+  if (settings.greetingTemplate) parts.push(`- Greeting template: ${settings.greetingTemplate}`);
+  if (settings.customInstructions) parts.push("", "Additional instructions:", settings.customInstructions);
 
   return parts.join("\n");
 }
