@@ -21,13 +21,13 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--gold)] text-[#07080E] font-black text-sm shadow-lg shadow-[rgba(200,146,14,0.35)] group-hover:shadow-[rgba(200,146,14,0.55)] transition-shadow">
+        <Link href="/" className="flex min-w-0 shrink items-center gap-2.5 group" onClick={() => setOpen(false)}>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--gold)] text-[#07080E] font-black text-sm shadow-lg shadow-[rgba(200,146,14,0.35)] group-hover:shadow-[rgba(200,146,14,0.55)] transition-shadow">
             AN
           </div>
-          <div>
-            <span className="block text-[15px] font-bold tracking-tight text-white leading-tight">{SITE.name}</span>
-            <span className="block text-[9px] uppercase tracking-[0.22em] text-[var(--muted)] leading-tight">Attaining the Unthought</span>
+          <div className="min-w-0">
+            <span className="block truncate text-[14px] font-bold tracking-tight text-white leading-tight sm:text-[15px]">{SITE.name}</span>
+            <span className="hidden text-[9px] uppercase tracking-[0.22em] text-[var(--muted)] leading-tight sm:block">Attaining the Unthought</span>
           </div>
         </Link>
 
@@ -58,14 +58,18 @@ export default function Navbar() {
         </div>
 
         {/* Mobile: order + hamburger */}
-        <div className="flex items-center gap-2 md:hidden">
-          <Link href="/order" className="btn-gold rounded-full px-4 py-1.5 text-[12px]" onClick={() => setOpen(false)}>
+        <div className="flex shrink-0 items-center gap-2 md:hidden">
+          <Link
+            href="/order"
+            className="btn-gold shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-[12px]"
+            onClick={() => setOpen(false)}
+          >
             Order Now
           </Link>
           <button
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted2)]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted2)]"
           >
             {open ? <IconX /> : <IconMenu />}
           </button>

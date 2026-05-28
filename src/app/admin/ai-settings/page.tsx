@@ -63,7 +63,7 @@ export default function AiSettingsPage() {
   if (!ready || loading) {
     return (
       <AdminShell>
-        <div className="px-8 py-8 flex h-40 items-center justify-center">
+        <div className="px-4 py-5 sm:px-8 sm:py-8 flex h-40 items-center justify-center">
           <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/10 border-t-[#C8920E]" />
         </div>
       </AdminShell>
@@ -72,7 +72,7 @@ export default function AiSettingsPage() {
 
   return (
     <AdminShell>
-      <div className="px-8 py-8">
+      <div className="px-4 py-5 sm:px-8 sm:py-8">
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-8">

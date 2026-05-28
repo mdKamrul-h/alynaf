@@ -18,7 +18,7 @@ export default function AdminOrdersPage() {
 
   return (
     <AdminShell>
-      <div className="px-8 py-8">
+      <div className="px-4 py-5 sm:px-8 sm:py-8">
         <OrdersTab adminKey={adminKey} />
       </div>
     </AdminShell>

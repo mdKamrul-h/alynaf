@@ -85,37 +85,38 @@ export function OrdersTab({ adminKey }: Props) {
   return (
     <div>
       {/* Header */}
-      <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Orders</h1>
-          <p className="mt-0.5 text-sm" style={{ color: "var(--muted)" }}>
-            {orders.length} order{orders.length !== 1 ? "s" : ""}
-            {sourceFilter !== "all" ? ` · ${sourceFilter}` : ""}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="mb-5">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div>
+            <h1 className="text-xl font-bold text-white sm:text-2xl">Orders</h1>
+            <p className="mt-0.5 text-xs sm:text-sm" style={{ color: "var(--muted)" }}>
+              {orders.length} order{orders.length !== 1 ? "s" : ""}
+              {sourceFilter !== "all" ? ` · ${sourceFilter}` : ""}
+            </p>
+          </div>
           {process.env.NODE_ENV !== "production" && (
             <button
               onClick={seedMockOrders}
               disabled={seeding}
-              className="rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all disabled:opacity-50"
+              className="shrink-0 rounded-lg px-3 py-1.5 text-[11px] font-medium transition-all disabled:opacity-50"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", color: "var(--muted2)" }}
             >
-              {seeding ? "Seeding…" : "Seed Mock Data"}
+              {seeding ? "Seeding…" : "Seed Data"}
             </button>
           )}
-          <div className="flex items-center gap-1 rounded-xl p-1"
-            style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}>
-            {SOURCE_FILTERS.map((f) => (
-              <button key={f.value} onClick={() => setSourceFilter(f.value)}
-                className="rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all"
-                style={sourceFilter === f.value
-                  ? { background: "rgba(200,146,14,0.15)", color: "#C8920E" }
-                  : { color: "var(--muted2)" }}>
-                {f.label}
-              </button>
-            ))}
-          </div>
+        </div>
+        {/* Source filter — scrollable row on mobile */}
+        <div className="flex items-center gap-1 overflow-x-auto rounded-xl p-1"
+          style={{ background: "var(--bg2)", border: "1px solid var(--border)" }}>
+          {SOURCE_FILTERS.map((f) => (
+            <button key={f.value} onClick={() => setSourceFilter(f.value)}
+              className="shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all"
+              style={sourceFilter === f.value
+                ? { background: "rgba(200,146,14,0.15)", color: "#C8920E" }
+                : { color: "var(--muted2)" }}>
+              {f.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -147,37 +148,38 @@ export function OrdersTab({ adminKey }: Props) {
                 style={isEscalated ? { borderColor: "rgba(239,68,68,0.4)", boxShadow: "0 0 0 1px rgba(239,68,68,0.1)" } : {}}>
 
                 {/* Card header */}
-                <div className="flex flex-wrap items-start gap-4 p-5"
+                <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:gap-4 sm:p-5"
                   style={{ borderBottom: "1px solid var(--border)" }}>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[13px] font-bold" style={{ color: "#C8920E" }}>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono text-[12px] font-bold sm:text-[13px]" style={{ color: "#C8920E" }}>
                         {order.orderNumber}
                       </span>
                       <SourceBadge source={order.source} convId={order.fbConversationId} />
                       {isEscalated && (
-                        <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[11px] font-medium text-red-400">
+                        <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-medium text-red-400">
                           Needs attention
                         </span>
                       )}
                     </div>
                     <p className="mt-1 text-[13px] text-white">
                       {order.customerName}
-                      <span style={{ color: "var(--muted)" }}> · {order.phone} · {order.city}</span>
+                      <span className="text-[12px]" style={{ color: "var(--muted)" }}> · {order.phone} · {order.city}</span>
                     </p>
                     <p className="mt-0.5 text-[11px]" style={{ color: "var(--muted)" }}>
                       {new Date(order.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>
 
-                  <div className="flex shrink-0 flex-wrap items-center gap-2">
+                  {/* Status controls — full-width row on mobile */}
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${STATUS_STYLES[order.status]}`}>
                       {ORDER_STATUS_LABELS[order.status]}
                     </span>
                     <select
                       value={order.status}
                       onChange={(e) => updateStatus(order.orderNumber, e.target.value as OrderStatus)}
-                      className="rounded-lg px-2.5 py-1.5 text-[12px] text-white focus:outline-none"
+                      className="flex-1 rounded-lg px-2.5 py-1.5 text-[12px] text-white focus:outline-none sm:flex-none"
                       style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)" }}>
                       {STATUSES.map((s) => (
                         <option key={s} value={s}>{ORDER_STATUS_LABELS[s]}</option>
