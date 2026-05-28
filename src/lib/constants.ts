@@ -19,7 +19,9 @@ export const SITE = {
 export interface StoreInfo {
   name: string;
   domain: string;
-  /** Override domain used for Clearbit logo lookup (use primary .com where .co.uk fails) */
+  /** Local SVG file in /public/logos/ (without extension) */
+  logoFile: string;
+  /** Override domain used for Clearbit logo lookup (fallback only) */
   logoDomain?: string;
   category: string;
   description: string;
@@ -31,6 +33,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Amazon UK",
     domain: "amazon.co.uk",
+    logoFile: "amazon",
     logoDomain: "amazon.com",
     category: "Everything",
     description: "Electronics, books, fashion, home & more",
@@ -40,6 +43,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "John Lewis",
     domain: "johnlewis.com",
+    logoFile: "johnlewis",
     category: "Department Store",
     description: "Premium homeware, fashion & electronics",
     color: "#007B5E",
@@ -48,6 +52,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Harrods",
     domain: "harrods.com",
+    logoFile: "harrods",
     category: "Luxury",
     description: "World-famous luxury department store",
     color: "#8B6914",
@@ -56,6 +61,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Selfridges",
     domain: "selfridges.com",
+    logoFile: "selfridges",
     category: "Luxury",
     description: "Iconic luxury fashion & lifestyle",
     color: "#F5D400",
@@ -64,6 +70,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "ASOS",
     domain: "asos.com",
+    logoFile: "asos",
     category: "Fashion",
     description: "Trending fashion for all styles",
     color: "#2D2D2D",
@@ -72,6 +79,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Adidas",
     domain: "adidas.co.uk",
+    logoFile: "adidas",
     logoDomain: "adidas.com",
     category: "Sports & Fashion",
     description: "Trainers, sportswear & accessories",
@@ -81,6 +89,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Nike",
     domain: "nike.com",
+    logoFile: "nike",
     category: "Sports & Fashion",
     description: "Iconic trainers, apparel & gear",
     color: "#111111",
@@ -89,6 +98,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Boots",
     domain: "boots.com",
+    logoFile: "boots",
     category: "Beauty & Health",
     description: "Skincare, makeup, health products",
     color: "#00539C",
@@ -97,6 +107,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Superdrug",
     domain: "superdrug.com",
+    logoFile: "superdrug",
     category: "Beauty & Health",
     description: "Beauty, fragrance & wellness",
     color: "#E5007D",
@@ -105,6 +116,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Argos",
     domain: "argos.co.uk",
+    logoFile: "argos",
     logoDomain: "argos.co.uk",
     category: "Home & Electronics",
     description: "Home appliances, toys & technology",
@@ -114,6 +126,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Farfetch",
     domain: "farfetch.com",
+    logoFile: "farfetch",
     category: "Luxury Fashion",
     description: "Designer brands from boutiques worldwide",
     color: "#1D1D1B",
@@ -122,6 +135,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Marks & Spencer",
     domain: "marksandspencer.com",
+    logoFile: "marksandspencer",
     logoDomain: "marksandspencer.com",
     category: "Fashion & Food",
     description: "Quality clothing, food & homeware",
@@ -131,6 +145,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Ted Baker",
     domain: "tedbaker.com",
+    logoFile: "tedbaker",
     category: "Fashion",
     description: "Contemporary British fashion brand",
     color: "#1A1A1A",
@@ -139,6 +154,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "Net-A-Porter",
     domain: "net-a-porter.com",
+    logoFile: "netaporter",
     logoDomain: "net-a-porter.com",
     category: "Luxury Fashion",
     description: "Ultra-luxury designer fashion",
@@ -148,6 +164,7 @@ export const STORES: StoreInfo[] = [
   {
     name: "eBay UK",
     domain: "ebay.co.uk",
+    logoFile: "ebay",
     logoDomain: "ebay.com",
     category: "Everything",
     description: "Marketplace with millions of products",

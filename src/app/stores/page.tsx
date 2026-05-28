@@ -56,6 +56,7 @@ export default function StoresPage() {
                       <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white">
                         <StoreLogoImg
                           domain={store.domain}
+                          logoFile={store.logoFile}
                           logoDomain={store.logoDomain}
                           name={store.name}
                           size={48}

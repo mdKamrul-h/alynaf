@@ -4,7 +4,9 @@ import { useState } from "react";
 
 interface StoreLogoImgProps {
   domain: string;
-  /** Primary .com domain used for Clearbit; falls back to Google favicon then initials */
+  /** Filename in /public/logos/ without extension */
+  logoFile?: string;
+  /** Clearbit fallback domain override */
   logoDomain?: string;
   name: string;
   size?: number;
@@ -13,18 +15,19 @@ interface StoreLogoImgProps {
 
 export default function StoreLogoImg({
   domain,
+  logoFile,
   logoDomain,
   name,
   size = 48,
   className = "",
 }: StoreLogoImgProps) {
-  // 0 = try Clearbit, 1 = try Google favicon, 2 = show initials
+  // 0 = local SVG, 1 = Clearbit, 2 = initials
   const [attempt, setAttempt] = useState(0);
 
   const clearbitDomain = logoDomain ?? domain;
-  const sources = [
+  const sources: string[] = [
+    ...(logoFile ? [`/logos/${logoFile}.svg`] : []),
     `https://logo.clearbit.com/${clearbitDomain}`,
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
   ];
 
   if (attempt >= sources.length) {
@@ -39,6 +42,8 @@ export default function StoreLogoImg({
     );
   }
 
+  const isLocal = sources[attempt].startsWith("/");
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -47,7 +52,7 @@ export default function StoreLogoImg({
       alt={name}
       width={size}
       height={size}
-      className={`rounded-xl bg-white object-contain ${className}`}
+      className={`rounded-xl object-contain ${isLocal ? "" : "bg-white"} ${className}`}
       onError={() => setAttempt((a) => a + 1)}
     />
   );

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="16" fill="white"/>
+  <!-- eBay coloured wordmark -->
+  <text x="15" y="62" font-family="Arial,sans-serif" font-size="38" font-weight="900" fill="#E53238">e</text>
+  <text x="35" y="62" font-family="Arial,sans-serif" font-size="38" font-weight="900" fill="#0064D2">b</text>
+  <text x="56" y="62" font-family="Arial,sans-serif" font-size="38" font-weight="900" fill="#F5AF02">a</text>
+  <text x="74" y="62" font-family="Arial,sans-serif" font-size="38" font-weight="900" fill="#86B817">y</text>
+</svg>

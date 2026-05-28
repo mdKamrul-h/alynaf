@@ -102,7 +102,7 @@ export default function HomePage() {
           <div className="marquee-track animate-marquee flex">
             {[...STORES, ...STORES].map((s, i) => (
               <span key={i} className="mx-6 inline-flex shrink-0 items-center gap-2.5 text-sm text-[var(--muted)]">
-                <StoreLogoImg domain={s.domain} logoDomain={s.logoDomain} name={s.name} size={20} className="h-5 w-5 rounded opacity-75" />
+                <StoreLogoImg domain={s.domain} logoFile={s.logoFile} logoDomain={s.logoDomain} name={s.name} size={20} className="h-5 w-5 rounded opacity-75" />
                 {s.name}
               </span>
             ))}
