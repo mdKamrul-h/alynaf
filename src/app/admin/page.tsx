@@ -3,35 +3,28 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "./_lib/AdminAuthContext";
+import { DEMO_ADMIN_KEY } from "@/lib/mock-admin-data";
+
+// The expected key — override with NEXT_PUBLIC_ADMIN_KEY in production
+const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY ?? DEMO_ADMIN_KEY;
 
 export default function AdminLoginPage() {
   const { adminKey, setAdminKey, ready } = useAdminAuth();
   const router = useRouter();
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (ready && adminKey) router.replace("/admin/dashboard");
   }, [ready, adminKey, router]);
 
-  async function handleLogin(e: React.FormEvent) {
+  function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/admin/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key }),
-      });
-      if (!res.ok) throw new Error();
+    if (key === ADMIN_KEY) {
       setAdminKey(key);
       router.push("/admin/dashboard");
-    } catch {
+    } else {
       setError("Invalid admin key. Try again.");
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -42,7 +35,7 @@ export default function AdminLoginPage() {
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4"
       style={{ background: "var(--bg)" }}
     >
-      {/* Ambient glow */}
+      {/* Glow */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div
           className="h-96 w-96 rounded-full opacity-10 blur-[120px]"
@@ -51,7 +44,7 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-sm">
-        {/* Logo */}
+        {/* Logo mark */}
         <div className="mb-8 flex flex-col items-center gap-3">
           <div
             className="flex h-12 w-12 items-center justify-center rounded-2xl"
@@ -65,7 +58,7 @@ export default function AdminLoginPage() {
           <div className="text-center">
             <h1 className="text-[16px] font-semibold text-white">AlyNaf Admin</h1>
             <p className="mt-0.5 text-[13px]" style={{ color: "var(--muted)" }}>
-              Sign in to manage your orders
+              Enter your access key to continue
             </p>
           </div>
         </div>
@@ -84,7 +77,7 @@ export default function AdminLoginPage() {
               <input
                 type="password"
                 value={key}
-                onChange={(e) => setKey(e.target.value)}
+                onChange={(e) => { setKey(e.target.value); setError(""); }}
                 placeholder="Enter your admin key"
                 autoFocus
                 autoComplete="current-password"
@@ -100,15 +93,15 @@ export default function AdminLoginPage() {
 
             <button
               type="submit"
-              disabled={loading || !key}
+              disabled={!key}
               className="btn-gold w-full py-3 text-[14px] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Verifying…" : "Continue →"}
+              Continue →
             </button>
           </div>
         </form>
 
-        {/* Demo hint */}
+        {/* Tap-to-fill demo hint */}
         <div
           className="mt-4 rounded-xl p-3 text-center text-[12px]"
           style={{ background: "rgba(200,146,14,0.06)", border: "1px solid rgba(200,146,14,0.15)" }}
@@ -116,13 +109,13 @@ export default function AdminLoginPage() {
           <span style={{ color: "var(--muted)" }}>Demo key: </span>
           <button
             type="button"
-            onClick={() => setKey("alynaf-admin")}
-            className="font-mono font-semibold"
+            onClick={() => { setKey(DEMO_ADMIN_KEY); setError(""); }}
+            className="font-mono font-semibold underline-offset-2 hover:underline"
             style={{ color: "#C8920E" }}
           >
-            alynaf-admin
+            {DEMO_ADMIN_KEY}
           </button>
-          <span style={{ color: "var(--muted)" }}> (tap to fill)</span>
+          <span style={{ color: "var(--muted)" }}> — tap to fill</span>
         </div>
       </div>
     </div>

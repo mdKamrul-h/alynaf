@@ -1,6 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
+export function isDbConfigured(): boolean {
+  return !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY));
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let client: SupabaseClient<any> | null = null;
 
