@@ -2,11 +2,201 @@
  * Predefined mock data served by all admin API routes when Supabase is
  * not configured. Gives a fully functional admin experience out-of-the-box.
  */
-import type { Order, FbConversation } from "./types";
+import type { Order, FbConversation, FbMessage, MessageSignals } from "./types";
 
-const NOW = "2026-05-29T10:00:00.000Z";
 const D = (hoursAgo: number) =>
   new Date(Date.now() - hoursAgo * 3_600_000).toISOString();
+
+function sig(s: Partial<MessageSignals>): string {
+  return JSON.stringify({
+    urls: [], phones: [], addressHints: [], prices: [], sizes: [],
+    isLikelyOrder: false, score: 0, ...s,
+  });
+}
+
+/** All mock messages keyed by conversation ID */
+export const MOCK_MESSAGES: Record<string, FbMessage[]> = {
+  mock_conv_nadia_001: [
+    {
+      id: "msg_nadia_1",
+      conversationId: "mock_conv_nadia_001",
+      fromType: "customer",
+      text: "Assalamu alaikum bhai! ASOS theke ei dress ta ki pathate parben? https://www.asos.com/pimki/pimki-ribbed-knit-midi-dress/prd/204567891 Size 10 lagbe. Uttara 7 no sector e deliver korben. Amar number 01712345678",
+      attachmentsJson: null,
+      signalsJson: sig({
+        urls: ["https://www.asos.com/pimki/pimki-ribbed-knit-midi-dress/prd/204567891"],
+        phones: ["01712345678"],
+        addressHints: ["Uttara, Dhaka"],
+        sizes: ["10"],
+        isLikelyOrder: true,
+        score: 85,
+        extractedCity: "Uttara, Dhaka",
+      }),
+      channel: "facebook",
+      createdAt: D(8),
+    },
+    {
+      id: "msg_nadia_2",
+      conversationId: "mock_conv_nadia_001",
+      fromType: "page",
+      text: "Wa alaikum assalam! Ji, ASOS theke pathano jay. £28.99 + shipping. Quote pathabo ajkei.",
+      attachmentsJson: null,
+      signalsJson: null,
+      channel: "facebook",
+      createdAt: D(7.5),
+    },
+    {
+      id: "msg_nadia_3",
+      conversationId: "mock_conv_nadia_001",
+      fromType: "customer",
+      text: "Okay! BDT te koto hobe? Address: House 12, Road 7, Sector 7, Uttara, Dhaka 1230",
+      attachmentsJson: null,
+      signalsJson: sig({
+        addressHints: ["House 12, Road 7, Sector 7, Uttara, Dhaka 1230"],
+        isLikelyOrder: true,
+        score: 75,
+        extractedCity: "Uttara, Dhaka",
+      }),
+      channel: "facebook",
+      createdAt: D(7),
+    },
+  ],
+
+  mock_conv_rafiq_002: [
+    {
+      id: "msg_rafiq_1",
+      conversationId: "mock_conv_rafiq_002",
+      fromType: "customer",
+      text: "Bhai Amazon UK theke ei Nike Air Max ta pathaben? https://www.amazon.co.uk/Nike-Air-Max-270/dp/B08XYZ12345 - size 9 UK lagbe. Phone: 01891234567",
+      attachmentsJson: null,
+      signalsJson: sig({
+        urls: ["https://www.amazon.co.uk/Nike-Air-Max-270/dp/B08XYZ12345"],
+        phones: ["01891234567"],
+        sizes: ["9 UK"],
+        prices: ["£89.99"],
+        isLikelyOrder: true,
+        score: 80,
+      }),
+      channel: "facebook",
+      createdAt: D(26),
+    },
+    {
+      id: "msg_rafiq_2",
+      conversationId: "mock_conv_rafiq_002",
+      fromType: "customer",
+      text: "Chittagong Agrabad te deliver korben. Koto din lagbe?",
+      attachmentsJson: null,
+      signalsJson: sig({
+        addressHints: ["Chittagong Agrabad"],
+        isLikelyOrder: true,
+        score: 60,
+        extractedCity: "Chittagong",
+      }),
+      channel: "facebook",
+      createdAt: D(25.5),
+    },
+    {
+      id: "msg_rafiq_3",
+      conversationId: "mock_conv_rafiq_002",
+      fromType: "page",
+      text: "Ji bhai! Amazon UK theke Nike Air Max pathano jabe inshaAllah. UK size 9 available ache. Chittagong deliver hobe 10-14 din er modhye. Full quote SMS korchi ajkei 🙏",
+      attachmentsJson: null,
+      signalsJson: null,
+      channel: "facebook",
+      createdAt: D(24),
+    },
+  ],
+
+  mock_conv_tasmin_003: [
+    {
+      id: "msg_tasmin_1",
+      conversationId: "mock_conv_tasmin_003",
+      fromType: "customer",
+      text: "Hello! Harrods theke La Mer cream ta ki available? https://www.harrods.com/en-gb/beauty/la-mer - 60ml size. Price koto hobe total?",
+      attachmentsJson: null,
+      signalsJson: sig({
+        urls: ["https://www.harrods.com/en-gb/beauty/la-mer"],
+        sizes: ["60ml"],
+        prices: ["£145"],
+        isLikelyOrder: true,
+        score: 70,
+      }),
+      channel: "facebook",
+      createdAt: D(20),
+    },
+  ],
+
+  mock_conv_karim_004: [
+    {
+      id: "msg_karim_1",
+      conversationId: "mock_conv_karim_004",
+      fromType: "customer",
+      text: "Bhai amar order er ki update ache? Order number AN-20260523-DD44. Onek din hoyeche.",
+      attachmentsJson: null,
+      signalsJson: sig({ score: 20 }),
+      channel: "facebook",
+      createdAt: D(60),
+    },
+    {
+      id: "msg_karim_2",
+      conversationId: "mock_conv_karim_004",
+      fromType: "page",
+      text: "Apnar order UK theke ship hoyeche, BD customs e ache. 3-5 din er modhye pouchabe inshaAllah.",
+      attachmentsJson: null,
+      signalsJson: null,
+      channel: "facebook",
+      createdAt: D(58),
+    },
+    {
+      id: "msg_karim_3",
+      conversationId: "mock_conv_karim_004",
+      fromType: "customer",
+      text: "Okay thank you! Customs e kono problem hobe na to?",
+      attachmentsJson: null,
+      signalsJson: sig({ score: 15 }),
+      channel: "facebook",
+      createdAt: D(40),
+    },
+  ],
+
+  mock_conv_farhana_007: [
+    {
+      id: "msg_farhana_1",
+      conversationId: "mock_conv_farhana_007",
+      fromType: "customer",
+      text: "Selfridges theke Gucci GG Marmont mini bag order korte chai. Black color lagbe. https://www.selfridges.com/GB/en/cat/gucci-gg-marmont-mini",
+      attachmentsJson: null,
+      signalsJson: sig({
+        urls: ["https://www.selfridges.com/GB/en/cat/gucci-gg-marmont-mini"],
+        prices: ["£1,150"],
+        isLikelyOrder: true,
+        score: 75,
+      }),
+      channel: "facebook",
+      createdAt: D(380),
+    },
+    {
+      id: "msg_farhana_2",
+      conversationId: "mock_conv_farhana_007",
+      fromType: "page",
+      text: "Ji apu, Gucci GG Marmont pathano jabe. Black available ache Selfridges e. £1,150 + shipping + customs — approximate ৳1,75,000 hobe. Confirm korben?",
+      attachmentsJson: null,
+      signalsJson: null,
+      channel: "facebook",
+      createdAt: D(370),
+    },
+    {
+      id: "msg_farhana_3",
+      conversationId: "mock_conv_farhana_007",
+      fromType: "customer",
+      text: "Okay, order cancel kore din. Budget nei.",
+      attachmentsJson: null,
+      signalsJson: sig({ score: 10 }),
+      channel: "facebook",
+      createdAt: D(300),
+    },
+  ],
+};
 
 export const MOCK_ORDERS: Order[] = [
   {
